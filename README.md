@@ -53,9 +53,23 @@ To start the application, run:
 python main.py
 ```
 
-- **Interactions:**  
+- **Interactions:**
   - Use hand gestures to control the cursor and interact with the on-screen elements.
   - Press the `q` key to exit the application.
+
+## How to Run the Tests
+
+From the project root, you can run all tests with:
+
+```bash
+python -m unittest discover tests
+```
+
+Or, if you prefer using **pytest**:
+
+```bash
+pytest
+```
 
 ## Contributing
 
