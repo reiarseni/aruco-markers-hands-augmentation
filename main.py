@@ -7,17 +7,20 @@ import time
 import numpy as np
 import logging
 
+from logger_config import configure_logging
 from augment_markers import load_augmented_images, find_aruco_markers, augment_aruco
 from hand_detector import HandDetector
 from marker_cache import MarkerCache
 from draggable_rectangle import DragRectangle
 import constants
 
-# Configuración del sistema de logging
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s [%(levelname)s] %(message)s"
-)
+# Configurar logging a partir del archivo YAML ubicado en la carpeta config
+try:
+    configure_logging("config/logging.yaml")
+except Exception as e:
+    logging.error(f"Error configurando el logging: {e}")
+    # Si falla la configuración, se continúa con la configuración por defecto
+    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(message)s")
 
 def main() -> None:
     """

@@ -1,0 +1,14 @@
+# Configuración del sistema de logging para la aplicación
+
+global_level: DEBUG
+
+handlers:
+  - type: console
+    level: DEBUG
+    format: "%(asctime)s [%(levelname)s] %(message)s"
+
+  - type: file
+    level: INFO
+    filename: logs/app.log
+    mode: a
+    format: "%(asctime)s [%(levelname)s] %(message)s"
