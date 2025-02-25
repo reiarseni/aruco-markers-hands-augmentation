@@ -1,14 +1,17 @@
 """
-Módulo para manejar el sistema de caché de marcadores ArUco.
+Módulo para gestionar el sistema de caché de marcadores ArUco.
 """
 
 from typing import Optional, Tuple, List, Any
+import logging
 from constants import CACHE_MAX_LOST_FRAMES
 
+# Configurar logger específico para este módulo
+logger = logging.getLogger(__name__)
 
 class MarkerCache:
     """
-    Clase para gestionar el caché de marcadores detectados.
+    Clase para gestionar la caché de marcadores detectados.
     """
 
     def __init__(self, max_lost_frames: int = CACHE_MAX_LOST_FRAMES) -> None:
@@ -20,7 +23,7 @@ class MarkerCache:
 
     def update_cache(self, new_markers: Tuple[List[Any], List[Any]]) -> Tuple[List[Any], List[Any]]:
         """
-        Actualiza el caché con los nuevos marcadores detectados.
+        Actualiza la caché con los nuevos marcadores detectados.
 
         Args:
             new_markers (Tuple[List[Any], List[Any]]): Tuple que contiene las bounding boxes y los IDs.
@@ -45,7 +48,7 @@ class MarkerCache:
 
     def pin_marker(self, current_markers: Tuple[List[Any], List[Any]]) -> None:
         """
-        Fija (pinea) el marcador detectado en el caché si no se ha fijado antes.
+        Fija (pinea) el marcador detectado en la caché si no ha sido fijado anteriormente.
 
         Args:
             current_markers (Tuple[List[Any], List[Any]]): Marcadores actuales.
@@ -56,7 +59,7 @@ class MarkerCache:
                 marker_id_int = int(marker_id)
                 if marker_id_int not in self.pinned_marker_ids:
                     self.pinned_markers.append(current_markers)
-                    print(marker_id_int)
+                    logger.info(f"Marcador fijado: {marker_id_int}")
                     self.pinned_marker_ids.append(marker_id_int)
 
     def clear_pinned_markers(self) -> None:

@@ -5,6 +5,7 @@ Aplicación principal de realidad aumentada utilizando detección de marcadores 
 import cv2
 import time
 import numpy as np
+import logging
 
 from augment_markers import load_augmented_images, find_aruco_markers, augment_aruco
 from hand_detector import HandDetector
@@ -12,10 +13,15 @@ from marker_cache import MarkerCache
 from draggable_rectangle import DragRectangle
 import constants
 
+# Configuración del sistema de logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 def main() -> None:
     """
-    Función principal de la aplicación.
+    Función principal de la aplicación de realidad aumentada.
     """
     # Inicializar la captura de video
     try:
@@ -23,14 +29,14 @@ def main() -> None:
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, constants.CAMERA_WIDTH)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, constants.CAMERA_HEIGHT)
     except Exception as e:
-        print(f"Error al iniciar la captura de video: {e}")
+        logging.error(f"Error al iniciar la captura de video: {e}")
         return
 
     # Cargar las imágenes de aumento para los marcadores
     try:
         augmented_images = load_augmented_images(constants.AUGMENTED_MARKERS_PATH)
     except Exception as e:
-        print(f"Error al cargar las imágenes aumentadas: {e}")
+        logging.error(f"Error al cargar las imágenes aumentadas: {e}")
         return
 
     # Inicializar el detector de manos si está habilitado
@@ -58,8 +64,8 @@ def main() -> None:
     # Variable para el cursor
     cursor = (0, 0)
 
-    # New variables for frame skipping
-    #FRAME_INTERVAL: int = 2  # Process only every 2nd frame
+    # Variables para el procesamiento de frames
+    frame_interval: int = 2  # Procesar solo cada 2º frame
     frame_count: int = 0
     last_processed_frame = None
 
@@ -67,17 +73,17 @@ def main() -> None:
         # Capturar frame de la cámara
         ret, frame = cap.read()
         if not ret:
-            print("Error al capturar el frame de la cámara.")
+            logging.error("Error al capturar el frame de la cámara.")
             break
 
-        # Check if we should process this frame or use the last processed frame
-        if frame_count % constants.FRAME_INTERVAL == 0:
+        # Verificar si se debe procesar este frame o usar el último procesado
+        if frame_count % frame_interval == 0:
             # Detección de manos si está habilitada
             if constants.ENABLE_HAND_DETECTION and hand_detector is not None:
                 frame = hand_detector.find_hands(frame)
                 landmark_list, _ = hand_detector.find_position(frame, draw=False)
                 if landmark_list:
-                    # Obtener la posición del índice y del dedo medio
+                    # Obtener la posición del dedo índice y del dedo medio
                     x_index, y_index = landmark_list[8][1], landmark_list[8][2]
                     x_middle, y_middle = landmark_list[12][1], landmark_list[12][2]
                     fingers = hand_detector.fingers_up()
@@ -156,10 +162,10 @@ def main() -> None:
             prev_time = current_time
             cv2.putText(frame, str(int(fps)), (20, 50), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
 
-            # Store the processed frame
+            # Almacenar el frame procesado
             last_processed_frame = frame.copy()
         else:
-            # Use the last processed frame for display if available
+            # Usar el último frame procesado para mostrar, si está disponible
             if last_processed_frame is not None:
                 frame = last_processed_frame.copy()
 
@@ -176,4 +182,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
