@@ -29,3 +29,6 @@ CACHE_MAX_LOST_FRAMES: int = 18
 
 # Umbral para considerar un clic (distancia entre dedos)
 CLICK_DISTANCE_THRESHOLD: float = 60.0
+
+# Parámetro para optimizar la cantidad de frames procesados, se procesa solo el N-esimo frame, se saltan frames
+FRAME_INTERVAL: int = 2

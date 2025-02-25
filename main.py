@@ -59,7 +59,7 @@ def main() -> None:
     cursor = (0, 0)
 
     # New variables for frame skipping
-    frame_interval: int = 2  # Process only every 2nd frame
+    #FRAME_INTERVAL: int = 2  # Process only every 2nd frame
     frame_count: int = 0
     last_processed_frame = None
 
@@ -71,7 +71,7 @@ def main() -> None:
             break
 
         # Check if we should process this frame or use the last processed frame
-        if frame_count % frame_interval == 0:
+        if frame_count % constants.FRAME_INTERVAL == 0:
             # Detección de manos si está habilitada
             if constants.ENABLE_HAND_DETECTION and hand_detector is not None:
                 frame = hand_detector.find_hands(frame)
